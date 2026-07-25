@@ -1,0 +1,56 @@
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg: #10131a;
+  --surface: #16202e;
+  --surface-raised: #1c2530;
+  --border: rgba(213, 219, 225, 0.08);
+
+  /* Text */
+  --text-primary: #f6f8fa;
+  --text-secondary: #6b7580;
+  --text-tertiary: #6b7580;
+
+  /* Accent — single Signal Blue, used for buttons, links, active states, streaks */
+  --accent: #35a7d9;
+  --accent-tint: rgba(53, 167, 217, 0.14);
+
+  --success: #35a7d9;
+  --danger: #ff5c5c;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Type */
+  --font-heading: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: 2.5rem;
+
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-raised: 0 12px 32px rgba(0, 0, 0, 0.45);
+
+  --tap-min: 44px;
+
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+}
