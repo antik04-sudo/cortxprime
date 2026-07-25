@@ -24,6 +24,12 @@ export interface StoredJournalEntry extends JournalEntry {
   profileId: string;
 }
 
+/** Same fixed JournalEntry shape, as stored in Supabase (uuid id, kid_id scoping). */
+export interface SupabaseJournalEntry extends JournalEntry {
+  id: string;
+  profileId: string;
+}
+
 export interface Profile {
   id: string;
   name: string;
@@ -31,6 +37,22 @@ export interface Profile {
   feelingWord: string;
   processGoal: string;
   createdAt: string;
+}
+
+/** A kid's Supabase-backed profile — `kids` table row shape. */
+export interface KidProfile {
+  id: string;
+  username: string;
+  sport: string | null;
+  feelingWord: string | null;
+  processGoal: string | null;
+}
+
+/** Public, column-limited row from the `kid_public_profiles` view (pre-login list). */
+export interface KidPublicProfile {
+  id: string;
+  username: string;
+  sport: string | null;
 }
 
 export interface SelfTalkScript {
