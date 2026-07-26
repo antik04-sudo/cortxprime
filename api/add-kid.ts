@@ -65,7 +65,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .select("id", { count: "exact", head: true })
     .eq("parent_id", parentId);
   if (countError) {
-    res.status(500).json({ error: "Could not check existing profiles" });
+    res.status(500).json({ error: "Could not check existing profiles", detail: countError });
     return;
   }
   if ((count ?? 0) >= MAX_KIDS_PER_PARENT) {
