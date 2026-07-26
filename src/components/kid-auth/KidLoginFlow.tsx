@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { listKidPublicProfiles } from "../../db/supabase/kidsRepo";
 import { useKidSession } from "../../state/KidSessionContext";
+import { hasAnyLocalData, isMigrationHandled } from "../../db/migrationRepo";
 import type { KidPublicProfile } from "../../types";
 import PinKeypad from "./PinKeypad";
 
@@ -57,6 +58,12 @@ export default function KidLoginFlow() {
         setError("Wrong PIN, try again");
         setPin("");
         setSubmitting(false);
+        return;
+      }
+
+      const kidId = body.kid.id as string;
+      if (!isMigrationHandled(kidId) && (await hasAnyLocalData())) {
+        navigate("/migrate-local-data");
         return;
       }
 

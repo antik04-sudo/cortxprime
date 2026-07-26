@@ -15,6 +15,7 @@ import ParentLogin from "./components/parent/ParentLogin";
 import ParentDashboard from "./components/parent/ParentDashboard";
 import KidLoginFlow from "./components/kid-auth/KidLoginFlow";
 import AdminFamilies from "./components/admin/AdminFamilies";
+import MigrationPrompt from "./components/migration/MigrationPrompt";
 
 export default function App() {
   return (
@@ -99,6 +100,14 @@ export default function App() {
 
             {/* Kid PIN auth */}
             <Route path="/kid/login" element={<KidLoginFlow />} />
+            <Route
+              path="/migrate-local-data"
+              element={
+                <RequireKid>
+                  <MigrationPrompt />
+                </RequireKid>
+              }
+            />
 
             {/* Admin */}
             <Route
