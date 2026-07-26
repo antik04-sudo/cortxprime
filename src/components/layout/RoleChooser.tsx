@@ -24,7 +24,7 @@ export default function RoleChooser() {
       <h1 style={{ fontSize: "var(--text-2xl)" }}>Welcome to CortXPrime</h1>
       <div className="stack">
         <button type="button" className="btn btn-primary btn-block" onClick={() => navigate("/kid/login")}>
-          I'm a kid
+          I'm an Athlete
         </button>
         <button type="button" className="btn btn-secondary btn-block" onClick={() => navigate("/parent/login")}>
           I'm a parent
