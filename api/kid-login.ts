@@ -26,11 +26,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const { data: kid } = await supabaseAdmin
+  const { data: kid, error: lookupError } = await supabaseAdmin
     .from("kids")
     .select("id, username, sport, pin_hash, auth_email")
     .eq("username", username.trim())
     .maybeSingle();
+
+  if (lookupError) {
+    res.status(500).json({ error: "Something went wrong. Try again." });
+    return;
+  }
 
   if (!kid) {
     await bcrypt.compare(pin, DUMMY_HASH);
