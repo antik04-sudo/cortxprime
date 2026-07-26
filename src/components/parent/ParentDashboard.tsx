@@ -8,7 +8,7 @@ import AddKidForm from "./AddKidForm";
 const MAX_KIDS = 2;
 
 export default function ParentDashboard() {
-  const { user, signOut } = useParentAuth();
+  const { user, isAdmin, signOut } = useParentAuth();
   const navigate = useNavigate();
 
   const [kids, setKids] = useState<KidProfile[]>([]);
@@ -52,6 +52,16 @@ export default function ParentDashboard() {
       <p className="text-secondary" style={{ fontSize: "var(--text-sm)" }}>
         {user?.email}
       </p>
+
+      {isAdmin && (
+        <button
+          type="button"
+          className="btn btn-secondary btn-block"
+          onClick={() => navigate("/admin")}
+        >
+          Admin: view all families
+        </button>
+      )}
 
       {loading ? (
         <p className="text-secondary">Loading…</p>

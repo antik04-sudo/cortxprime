@@ -15,6 +15,7 @@ import ParentLogin from "./components/parent/ParentLogin";
 import ParentDashboard from "./components/parent/ParentDashboard";
 import KidLoginFlow from "./components/kid-auth/KidLoginFlow";
 import KidLoggedInPlaceholder from "./components/kid-auth/KidLoggedInPlaceholder";
+import AdminFamilies from "./components/admin/AdminFamilies";
 
 export default function App() {
   return (
@@ -41,6 +42,9 @@ export default function App() {
                   replaced once the real journal flows are wired to Supabase (task #22) */}
               <Route path="/kid/login" element={<KidLoginFlow />} />
               <Route path="/kid/home" element={<KidLoggedInPlaceholder />} />
+
+              {/* Admin — gated inside AdminFamilies itself (redirects non-admins) */}
+              <Route path="/admin" element={<AdminFamilies />} />
             </Routes>
           </HashRouter>
         </ActiveProfileProvider>
