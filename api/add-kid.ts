@@ -6,9 +6,21 @@ import crypto from "node:crypto";
 const MAX_KIDS_PER_PARENT = 2;
 const PIN_PATTERN = /^\d{4}$/;
 
+// Service-role client for privileged operations (bypasses RLS): counting kids,
+// creating the synthetic auth user, inserting the kids row.
 const supabaseAdmin = createClient(
   process.env.VITE_SUPABASE_URL!,
   process.env.SUPABASE_SECRET_KEY!
+);
+
+// Anon-keyed client used only to verify the parent's own JWT via getUser(token).
+// Deliberately separate from supabaseAdmin — passing a foreign user's token to
+// a client already configured with the service_role key doesn't reliably
+// validate it the same way (confirmed: Supabase's own /auth/v1/user accepted
+// the token directly, but supabaseAdmin.auth.getUser(token) rejected it).
+const supabaseAuthCheck = createClient(
+  process.env.VITE_SUPABASE_URL!,
+  process.env.VITE_SUPABASE_ANON_KEY!
 );
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -24,7 +36,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const { data: userData, error: userError } = await supabaseAdmin.auth.getUser(parentToken);
+  const { data: userData, error: userError } = await supabaseAuthCheck.auth.getUser(parentToken);
   if (userError || !userData.user) {
     res.status(401).json({ error: "Invalid parent session" });
     return;
