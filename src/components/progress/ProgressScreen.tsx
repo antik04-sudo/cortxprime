@@ -1,13 +1,13 @@
 import AppShell from "../layout/AppShell";
-import { useActiveProfile } from "../../state/ActiveProfileContext";
+import { useKidSession } from "../../state/KidSessionContext";
 import { useJournalEntries } from "../../hooks/useJournalEntries";
 import { useStreak } from "../../hooks/useStreak";
 import StreakSummary from "../home/StreakSummary";
 import MilestoneHistory from "./MilestoneHistory";
 
 export default function ProgressScreen() {
-  const { activeProfile } = useActiveProfile();
-  const { entries } = useJournalEntries(activeProfile?.id);
+  const { kid } = useKidSession();
+  const { entries } = useJournalEntries(kid?.id);
   const streak = useStreak(entries);
 
   return (

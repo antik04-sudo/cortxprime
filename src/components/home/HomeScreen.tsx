@@ -1,6 +1,6 @@
-import { useLocation, Navigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import AppShell from "../layout/AppShell";
-import { useActiveProfile } from "../../state/ActiveProfileContext";
+import { useKidSession } from "../../state/KidSessionContext";
 import { useJournalEntries } from "../../hooks/useJournalEntries";
 import { useStreak } from "../../hooks/useStreak";
 import PromptOfTheDayCard from "./PromptOfTheDayCard";
@@ -13,13 +13,11 @@ interface HomeLocationState {
 }
 
 export default function HomeScreen() {
-  const { activeProfile, loading: profileLoading } = useActiveProfile();
-  const { entries } = useJournalEntries(activeProfile?.id);
+  const { kid } = useKidSession();
+  const { entries } = useJournalEntries(kid?.id);
   const streak = useStreak(entries);
   const location = useLocation();
   const state = location.state as HomeLocationState | null;
-
-  if (!profileLoading && !activeProfile) return <Navigate to="/" replace />;
 
   return (
     <AppShell>

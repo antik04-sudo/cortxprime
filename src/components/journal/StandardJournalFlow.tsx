@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useActiveProfile } from "../../state/ActiveProfileContext";
+import { useKidSession } from "../../state/KidSessionContext";
 import { useJournalEntries } from "../../hooks/useJournalEntries";
 import { standardJournal } from "../../content/copy";
 import { milestoneForCount } from "../../utils/streak";
@@ -10,8 +10,8 @@ import JournalCompletion from "./JournalCompletion";
 import type { EntryContext, JournalEntry } from "../../types";
 
 export default function StandardJournalFlow() {
-  const { activeProfile } = useActiveProfile();
-  const { entries, logEntry } = useJournalEntries(activeProfile?.id);
+  const { kid } = useKidSession();
+  const { entries, logEntry } = useJournalEntries(kid?.id);
   const navigate = useNavigate();
 
   const [context, setContext] = useState<EntryContext | null>(null);
@@ -20,16 +20,16 @@ export default function StandardJournalFlow() {
   const [done, setDone] = useState(false);
   const [milestoneMessage, setMilestoneMessage] = useState<string | null>(null);
 
-  if (!activeProfile) return null;
+  if (!kid) return null;
 
   async function handleFinish(finalAnswers: typeof answers) {
     const entry: JournalEntry = {
       entryType: "standard",
       context: context!,
-      sport: activeProfile!.sport,
+      sport: kid!.sport ?? "",
       answers: finalAnswers,
       feltWord: null,
-      processGoal: activeProfile!.processGoal,
+      processGoal: kid!.processGoal ?? "",
       timestamp: new Date().toISOString(),
     };
     setMilestoneMessage(milestoneForCount(entries.length + 1));

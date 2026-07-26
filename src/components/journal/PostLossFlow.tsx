@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useActiveProfile } from "../../state/ActiveProfileContext";
+import { useKidSession } from "../../state/KidSessionContext";
 import { useJournalEntries } from "../../hooks/useJournalEntries";
 import { postLoss } from "../../content/copy";
 import { milestoneForCount } from "../../utils/streak";
@@ -13,8 +13,8 @@ import type { EntryContext, JournalEntry } from "../../types";
 type Stage = "context" | "breathing" | "reflect" | "done";
 
 export default function PostLossFlow() {
-  const { activeProfile } = useActiveProfile();
-  const { entries, logEntry } = useJournalEntries(activeProfile?.id);
+  const { kid } = useKidSession();
+  const { entries, logEntry } = useJournalEntries(kid?.id);
   const navigate = useNavigate();
 
   const [stage, setStage] = useState<Stage>("context");
@@ -23,16 +23,16 @@ export default function PostLossFlow() {
   const [answers, setAnswers] = useState({ q1: "", q2: "", q3: "" });
   const [milestoneMessage, setMilestoneMessage] = useState<string | null>(null);
 
-  if (!activeProfile) return null;
+  if (!kid) return null;
 
   async function handleFinish(finalAnswers: typeof answers) {
     const entry: JournalEntry = {
       entryType: "post_loss",
       context: context!,
-      sport: activeProfile!.sport,
+      sport: kid!.sport ?? "",
       answers: finalAnswers,
       feltWord: finalAnswers.q1,
-      processGoal: activeProfile!.processGoal,
+      processGoal: kid!.processGoal ?? "",
       timestamp: new Date().toISOString(),
     };
     setMilestoneMessage(milestoneForCount(entries.length + 1));

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useActiveProfile } from "../../state/ActiveProfileContext";
+import { useKidSession } from "../../state/KidSessionContext";
 import styles from "./AppShell.module.css";
 
 const navItems = [
@@ -24,11 +24,11 @@ const navItems = [
 ];
 
 export default function AppShell({ children }: { children: ReactNode }) {
-  const { activeProfile, clearActiveProfile } = useActiveProfile();
+  const { kid, logout } = useKidSession();
   const navigate = useNavigate();
 
-  function handleSwitchProfile() {
-    clearActiveProfile();
+  async function handleLogout() {
+    await logout();
     navigate("/");
   }
 
@@ -40,14 +40,14 @@ export default function AppShell({ children }: { children: ReactNode }) {
         </div>
         <div className={styles.profileArea}>
           <span style={{ fontFamily: "var(--font-heading)", fontWeight: 600 }}>
-            {activeProfile?.name}
+            {kid?.username}
           </span>
           <button
             type="button"
             className={styles.profileButton}
-            onClick={handleSwitchProfile}
+            onClick={handleLogout}
           >
-            Switch profile
+            Log out
           </button>
         </div>
       </header>

@@ -11,7 +11,8 @@ export default function RoleChooser() {
   useEffect(() => {
     if (parentLoading || kidLoading) return;
     if (kid) {
-      navigate("/kid/home", { replace: true });
+      // RequireKidReady (on /home) bounces to /onboarding itself if setup's incomplete
+      navigate("/home", { replace: true });
     } else if (user) {
       navigate("/parent/dashboard", { replace: true });
     }

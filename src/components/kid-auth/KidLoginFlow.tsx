@@ -60,7 +60,8 @@ export default function KidLoginFlow() {
         return;
       }
 
-      navigate("/kid/home");
+      // RequireKidReady (on /home) bounces to /onboarding itself if setup's incomplete
+      navigate("/home");
     } catch {
       setError("Something went wrong. Try again.");
       setPin("");

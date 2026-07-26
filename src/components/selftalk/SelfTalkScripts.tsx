@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
 import AppShell from "../layout/AppShell";
-import { useActiveProfile } from "../../state/ActiveProfileContext";
+import { useKidSession } from "../../state/KidSessionContext";
 import { useFavorites } from "../../hooks/useFavorites";
 import { selfTalkScripts } from "../../content/selfTalkScripts";
 import TriggerFilterTabs, { type TriggerFilter } from "./TriggerFilterTabs";
 import ScriptCard from "./ScriptCard";
 
 export default function SelfTalkScripts() {
-  const { activeProfile } = useActiveProfile();
-  const { favoriteIds, toggle } = useFavorites(activeProfile?.id);
+  const { kid } = useKidSession();
+  const { favoriteIds, toggle } = useFavorites(kid?.id);
   const [filter, setFilter] = useState<TriggerFilter>("all");
 
   const visibleScripts = useMemo(

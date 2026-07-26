@@ -15,6 +15,7 @@ interface KidSessionContextValue {
   loading: boolean;
   loginWithTokenHash: (tokenHash: string) => Promise<{ error: string | null }>;
   logout: () => Promise<void>;
+  refreshKid: () => Promise<void>;
 }
 
 const KidSessionContext = createContext<KidSessionContextValue | null>(null);
@@ -60,7 +61,9 @@ export function KidSessionProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <KidSessionContext.Provider value={{ kid, loading, loginWithTokenHash, logout }}>
+    <KidSessionContext.Provider
+      value={{ kid, loading, loginWithTokenHash, logout, refreshKid: loadKidForSession }}
+    >
       {children}
     </KidSessionContext.Provider>
   );

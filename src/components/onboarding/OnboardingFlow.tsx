@@ -1,35 +1,34 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useActiveProfile } from "../../state/ActiveProfileContext";
+import { useKidSession } from "../../state/KidSessionContext";
+import { updateMyKidPrefs } from "../../db/supabase/kidsRepo";
 import { onboarding } from "../../content/copy";
 import ProcessGoalPicker from "./ProcessGoalPicker";
-import type { Profile } from "../../types";
 
 export default function OnboardingFlow() {
-  const { addProfile } = useActiveProfile();
+  const { kid, refreshKid } = useKidSession();
   const navigate = useNavigate();
 
   const [step, setStep] = useState<"form" | "welcome">("form");
-  const [name, setName] = useState("");
-  const [sport, setSport] = useState("");
   const [feelingWord, setFeelingWord] = useState("");
   const [customFeelingWord, setCustomFeelingWord] = useState("");
   const [processGoal, setProcessGoal] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const resolvedFeelingWord = customFeelingWord || feelingWord;
-  const canSubmit = name.trim() && sport.trim() && resolvedFeelingWord.trim() && processGoal.trim();
+  const canSubmit = resolvedFeelingWord.trim() && processGoal.trim();
+
+  if (!kid) return null;
 
   async function handleSubmit() {
     if (!canSubmit) return;
-    const profile: Profile = {
-      id: crypto.randomUUID(),
-      name: name.trim(),
-      sport: sport.trim(),
+    setSubmitting(true);
+    await updateMyKidPrefs(kid!.id, {
       feelingWord: resolvedFeelingWord.trim(),
       processGoal: processGoal.trim(),
-      createdAt: new Date().toISOString(),
-    };
-    await addProfile(profile);
+    });
+    await refreshKid();
+    setSubmitting(false);
     setStep("welcome");
   }
 
@@ -64,16 +63,6 @@ export default function OnboardingFlow() {
       <h1>{onboarding.screenIntro}</h1>
 
       <div className="field">
-        <label htmlFor="name">Your name or nickname</label>
-        <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
-      </div>
-
-      <div className="field">
-        <label htmlFor="sport">Your sport</label>
-        <input id="sport" type="text" value={sport} onChange={(e) => setSport(e.target.value)} />
-      </div>
-
-      <div className="field">
         <label>One word for how you want to feel when you compete</label>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
           {onboarding.feelingWordExamples.map((word) => (
@@ -104,8 +93,13 @@ export default function OnboardingFlow() {
         <ProcessGoalPicker value={processGoal} onChange={setProcessGoal} />
       </div>
 
-      <button type="button" className="btn btn-primary btn-block" disabled={!canSubmit} onClick={handleSubmit}>
-        Set it up
+      <button
+        type="button"
+        className="btn btn-primary btn-block"
+        disabled={!canSubmit || submitting}
+        onClick={handleSubmit}
+      >
+        {submitting ? "Saving…" : "Set it up"}
       </button>
     </div>
   );

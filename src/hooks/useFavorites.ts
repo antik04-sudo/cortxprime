@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { listFavoriteScriptIds, toggleFavorite } from "../db/favoritesRepo";
+import { listFavoriteScriptIds, toggleFavorite } from "../db/supabase/favoritesRepo";
 
 export function useFavorites(profileId: string | undefined) {
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
