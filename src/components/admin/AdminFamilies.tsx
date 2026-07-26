@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useParentAuth } from "../../state/ParentAuthContext";
 import { listEntriesForProfile } from "../../db/supabase/entriesRepo";
 import type { SupabaseJournalEntry } from "../../types";
@@ -17,8 +16,7 @@ interface Family {
 }
 
 export default function AdminFamilies() {
-  const { session, isAdmin, loading: authLoading } = useParentAuth();
-  const navigate = useNavigate();
+  const { session } = useParentAuth();
 
   const [families, setFamilies] = useState<Family[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,15 +27,9 @@ export default function AdminFamilies() {
   const [entriesLoading, setEntriesLoading] = useState(false);
 
   useEffect(() => {
-    if (authLoading) return;
-    if (!isAdmin) {
-      navigate("/parent/dashboard");
-      return;
-    }
-    if (!session) return;
-
+    // RequireAdmin (App.tsx) guarantees session exists before this renders
     fetch("/api/admin-families", {
-      headers: { Authorization: `Bearer ${session.access_token}` },
+      headers: { Authorization: `Bearer ${session!.access_token}` },
     })
       .then(async (res) => {
         const body = await res.json();
@@ -46,7 +38,7 @@ export default function AdminFamilies() {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [authLoading, isAdmin, session, navigate]);
+  }, [session]);
 
   async function handleSelectKid(kid: Kid) {
     setSelectedKid(kid);
@@ -56,7 +48,7 @@ export default function AdminFamilies() {
     setEntriesLoading(false);
   }
 
-  if (authLoading || loading) {
+  if (loading) {
     return (
       <div className="screen">
         <p className="text-secondary">Loading…</p>

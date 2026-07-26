@@ -2,7 +2,8 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import { ActiveProfileProvider } from "./state/ActiveProfileContext";
 import { ParentAuthProvider } from "./state/ParentAuthContext";
 import { KidSessionProvider } from "./state/KidSessionContext";
-import ProfileGate from "./components/layout/ProfileGate";
+import RoleChooser from "./components/layout/RoleChooser";
+import { RequireParent, RequireKid, RequireAdmin } from "./components/layout/RouteGuards";
 import OnboardingFlow from "./components/onboarding/OnboardingFlow";
 import HomeScreen from "./components/home/HomeScreen";
 import StandardJournalFlow from "./components/journal/StandardJournalFlow";
@@ -24,7 +25,11 @@ export default function App() {
         <ActiveProfileProvider>
           <HashRouter>
             <Routes>
-              <Route path="/" element={<ProfileGate />} />
+              <Route path="/" element={<RoleChooser />} />
+
+              {/* Phase 1 screens — still local-IndexedDB-backed (ActiveProfileContext).
+                  No longer linked from the root entry point; reachable only once a kid
+                  session's Home screen (task #22) routes into them post-rewire. */}
               <Route path="/onboarding" element={<OnboardingFlow />} />
               <Route path="/home" element={<HomeScreen />} />
               <Route path="/journal/standard" element={<StandardJournalFlow />} />
@@ -33,18 +38,39 @@ export default function App() {
               <Route path="/self-talk" element={<SelfTalkScripts />} />
               <Route path="/progress" element={<ProgressScreen />} />
 
-              {/* Parent auth — new for Phase 2, additive only, doesn't touch the routes above */}
+              {/* Parent auth */}
               <Route path="/parent/signup" element={<ParentSignup />} />
               <Route path="/parent/login" element={<ParentLogin />} />
-              <Route path="/parent/dashboard" element={<ParentDashboard />} />
+              <Route
+                path="/parent/dashboard"
+                element={
+                  <RequireParent>
+                    <ParentDashboard />
+                  </RequireParent>
+                }
+              />
 
-              {/* Kid PIN auth — new for Phase 2. /kid/home is a temporary placeholder,
-                  replaced once the real journal flows are wired to Supabase (task #22) */}
+              {/* Kid PIN auth. /kid/home is a temporary placeholder until task #22
+                  rewires the real journal flows to the Supabase-backed kid session. */}
               <Route path="/kid/login" element={<KidLoginFlow />} />
-              <Route path="/kid/home" element={<KidLoggedInPlaceholder />} />
+              <Route
+                path="/kid/home"
+                element={
+                  <RequireKid>
+                    <KidLoggedInPlaceholder />
+                  </RequireKid>
+                }
+              />
 
-              {/* Admin — gated inside AdminFamilies itself (redirects non-admins) */}
-              <Route path="/admin" element={<AdminFamilies />} />
+              {/* Admin */}
+              <Route
+                path="/admin"
+                element={
+                  <RequireAdmin>
+                    <AdminFamilies />
+                  </RequireAdmin>
+                }
+              />
             </Routes>
           </HashRouter>
         </ActiveProfileProvider>

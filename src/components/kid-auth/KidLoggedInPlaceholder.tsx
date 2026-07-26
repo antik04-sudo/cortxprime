@@ -2,21 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useKidSession } from "../../state/KidSessionContext";
 
 export default function KidLoggedInPlaceholder() {
-  const { kid, loading, logout } = useKidSession();
+  const { kid, logout } = useKidSession();
   const navigate = useNavigate();
 
-  if (loading) return null;
-
-  if (!kid) {
-    return (
-      <div className="screen">
-        <p className="text-secondary">Not logged in.</p>
-        <button type="button" className="btn btn-primary" onClick={() => navigate("/kid/login")}>
-          Go to login
-        </button>
-      </div>
-    );
-  }
+  // RequireKid (App.tsx) guarantees a kid is loaded before this renders
+  if (!kid) return null;
 
   return (
     <div className="screen" style={{ justifyContent: "center", textAlign: "center", gap: "var(--space-5)" }}>
