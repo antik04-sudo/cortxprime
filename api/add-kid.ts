@@ -60,38 +60,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const { count, error: countError } = await supabaseAdmin
+  const { data: existingKids, error: countError } = await supabaseAdmin
     .from("kids")
-    .select("id", { count: "exact", head: true })
+    .select("id")
     .eq("parent_id", parentId);
   if (countError) {
     res.status(500).json({
       error: "Could not check existing profiles",
-      detail: {
-        message: countError.message,
-        code: countError.code,
-        details: countError.details,
-        hint: countError.hint,
-        name: countError.name,
-        raw: String(countError),
-      },
+      detail: { message: countError.message, raw: JSON.stringify(countError) },
     });
     return;
   }
-  if ((count ?? 0) >= MAX_KIDS_PER_PARENT) {
+  if ((existingKids?.length ?? 0) >= MAX_KIDS_PER_PARENT) {
     res.status(400).json({ error: `Maximum ${MAX_KIDS_PER_PARENT} kid profiles per account` });
     return;
   }
 
-  const { count: usernameCount, error: usernameCheckError } = await supabaseAdmin
+  const { data: usernameMatches, error: usernameCheckError } = await supabaseAdmin
     .from("kids")
-    .select("id", { count: "exact", head: true })
+    .select("id")
     .eq("username", trimmedUsername);
   if (usernameCheckError) {
-    res.status(500).json({ error: "Could not check username" });
+    res.status(500).json({
+      error: "Could not check username",
+      detail: { message: usernameCheckError.message, raw: JSON.stringify(usernameCheckError) },
+    });
     return;
   }
-  if ((usernameCount ?? 0) > 0) {
+  if ((usernameMatches?.length ?? 0) > 0) {
     res.status(409).json({ error: "That username is already taken" });
     return;
   }
@@ -106,7 +102,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     email_confirm: true,
   });
   if (createUserError || !createdUser.user) {
-    res.status(500).json({ error: "Could not create kid account" });
+    res.status(500).json({
+      error: "Could not create kid account",
+      detail: { message: createUserError?.message, raw: JSON.stringify(createUserError) },
+    });
     return;
   }
   const kidAuthId = createdUser.user.id;
@@ -127,7 +126,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (insertError || !kidRow) {
     // Roll back the orphaned auth user so we don't leak accounts with no kid row
     await supabaseAdmin.auth.admin.deleteUser(kidAuthId);
-    res.status(500).json({ error: "Could not create kid profile" });
+    res.status(500).json({
+      error: "Could not create kid profile",
+      detail: { message: insertError?.message, raw: JSON.stringify(insertError) },
+    });
     return;
   }
 
