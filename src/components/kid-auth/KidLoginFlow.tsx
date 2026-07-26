@@ -1,0 +1,133 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { listKidPublicProfiles } from "../../db/supabase/kidsRepo";
+import { useKidSession } from "../../state/KidSessionContext";
+import type { KidPublicProfile } from "../../types";
+import PinKeypad from "./PinKeypad";
+
+type Step = "select" | "pin";
+
+export default function KidLoginFlow() {
+  const { loginWithTokenHash } = useKidSession();
+  const navigate = useNavigate();
+
+  const [step, setStep] = useState<Step>("select");
+  const [profiles, setProfiles] = useState<KidPublicProfile[]>([]);
+  const [loadingProfiles, setLoadingProfiles] = useState(true);
+  const [selected, setSelected] = useState<KidPublicProfile | null>(null);
+  const [pin, setPin] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    listKidPublicProfiles()
+      .then(setProfiles)
+      .finally(() => setLoadingProfiles(false));
+  }, []);
+
+  useEffect(() => {
+    if (pin.length === 4 && !submitting) {
+      handleSubmitPin();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pin]);
+
+  async function handleSubmitPin() {
+    if (!selected) return;
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/kid-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: selected.username, pin }),
+      });
+      const body = await res.json();
+
+      if (!res.ok) {
+        setError(body.error ?? "Wrong PIN, try again");
+        setPin("");
+        setSubmitting(false);
+        return;
+      }
+
+      const { error: sessionError } = await loginWithTokenHash(body.tokenHash);
+      if (sessionError) {
+        setError("Wrong PIN, try again");
+        setPin("");
+        setSubmitting(false);
+        return;
+      }
+
+      navigate("/kid/home");
+    } catch {
+      setError("Something went wrong. Try again.");
+      setPin("");
+      setSubmitting(false);
+    }
+  }
+
+  if (step === "select") {
+    return (
+      <div className="screen">
+        <h1>Who's this?</h1>
+        {loadingProfiles && <p className="text-secondary">Loading…</p>}
+        <div className="stack">
+          {profiles.map((profile) => (
+            <button
+              key={profile.id}
+              type="button"
+              className="card"
+              style={{ textAlign: "left", cursor: "pointer" }}
+              onClick={() => {
+                setSelected(profile);
+                setError(null);
+                setPin("");
+                setStep("pin");
+              }}
+            >
+              <strong style={{ fontFamily: "var(--font-heading)" }}>{profile.username}</strong>
+              {profile.sport && (
+                <>
+                  <br />
+                  <span className="text-secondary" style={{ fontSize: "var(--text-sm)" }}>
+                    {profile.sport}
+                  </span>
+                </>
+              )}
+            </button>
+          ))}
+          {!loadingProfiles && profiles.length === 0 && (
+            <p className="text-secondary">No profiles yet — ask a parent to set one up.</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="screen" style={{ justifyContent: "center", textAlign: "center", gap: "var(--space-5)" }}>
+      <button
+        type="button"
+        onClick={() => setStep("select")}
+        style={{
+          background: "none",
+          border: "none",
+          color: "var(--text-secondary)",
+          fontSize: "var(--text-sm)",
+          cursor: "pointer",
+          alignSelf: "flex-start",
+        }}
+      >
+        ← Not {selected?.username}?
+      </button>
+
+      <h1 style={{ fontSize: "var(--text-xl)" }}>Enter your PIN</h1>
+
+      <PinKeypad value={pin} onChange={setPin} disabled={submitting} />
+
+      {error && <p style={{ color: "var(--danger)", fontSize: "var(--text-sm)" }}>{error}</p>}
+    </div>
+  );
+}
