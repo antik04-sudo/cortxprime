@@ -32,20 +32,20 @@ export async function getMyKidProfile(kidId: string): Promise<KidProfile | null>
 }
 
 /**
- * Kids may only ever update these three columns on their own row (DB-enforced
- * via column grant, not just RLS — see schema.sql). `username` is optional so
- * the migration flow (which only ever sets feelingWord/processGoal from
- * migrated Phase-1 data) can keep calling this without touching it.
+ * Only these three columns can be updated this way on a kid's row (DB-enforced
+ * via column grant, not just RLS — see schema.sql). All fields are optional
+ * and only the ones provided are written, so callers can update just one —
+ * onboarding sets all three, migration sets feelingWord/processGoal only,
+ * and a parent fixing a typo (ParentDashboard) sets username only.
  */
 export async function updateMyKidPrefs(
   kidId: string,
-  prefs: { username?: string; feelingWord: string; processGoal: string }
+  prefs: { username?: string; feelingWord?: string; processGoal?: string }
 ): Promise<void> {
-  const update: Record<string, string> = {
-    feeling_word: prefs.feelingWord,
-    process_goal: prefs.processGoal,
-  };
-  if (prefs.username) update.username = prefs.username;
+  const update: Record<string, string> = {};
+  if (prefs.username !== undefined) update.username = prefs.username;
+  if (prefs.feelingWord !== undefined) update.feeling_word = prefs.feelingWord;
+  if (prefs.processGoal !== undefined) update.process_goal = prefs.processGoal;
 
   const { error } = await supabase.from("kids").update(update).eq("id", kidId);
   if (error) throw error;
