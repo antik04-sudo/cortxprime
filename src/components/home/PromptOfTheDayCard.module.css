@@ -1,0 +1,7 @@
+.prompt {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-top: var(--space-2);
+}

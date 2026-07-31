@@ -1,3 +1,8 @@
+import Panel from "../ui/Panel";
+import CoreGauge from "../ui/CoreGauge";
+import MetricCard from "../ui/MetricCard";
+import styles from "./StreakSummary.module.css";
+
 interface StreakSummaryProps {
   currentStreak: number;
   longestStreak: number;
@@ -5,31 +10,15 @@ interface StreakSummaryProps {
 }
 
 export default function StreakSummary({ currentStreak, longestStreak, totalEntries }: StreakSummaryProps) {
-  const stats = [
-    { label: "Current streak", value: currentStreak },
-    { label: "Longest streak", value: longestStreak },
-    { label: "Entries logged", value: totalEntries },
-  ];
-
   return (
-    <div className="card" style={{ display: "flex", justifyContent: "space-between" }}>
-      {stats.map((stat) => (
-        <div key={stat.label} className="text-center" style={{ flex: 1 }}>
-          <div
-            style={{
-              fontFamily: "var(--font-heading)",
-              fontSize: "var(--text-2xl)",
-              fontWeight: 600,
-              color: "var(--accent)",
-            }}
-          >
-            {stat.value}
-          </div>
-          <div className="text-secondary" style={{ fontSize: "var(--text-xs)" }}>
-            {stat.label}
-          </div>
-        </div>
-      ))}
+    <div className={styles.wrap}>
+      <Panel className={styles.gaugePanel}>
+        <CoreGauge value={currentStreak} target={Math.max(longestStreak, 1)} label="DAY STREAK" />
+      </Panel>
+      <div className={styles.grid}>
+        <MetricCard label="Longest streak" value={longestStreak} unit="days" tone="cyan" />
+        <MetricCard label="Entries logged" value={totalEntries} unit="total" tone="cyan" />
+      </div>
     </div>
   );
 }

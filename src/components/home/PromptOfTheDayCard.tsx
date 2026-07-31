@@ -1,17 +1,13 @@
 import { promptOfTheDay } from "../../utils/promptRotation";
+import Panel from "../ui/Panel";
+import Label from "../ui/Label";
+import styles from "./PromptOfTheDayCard.module.css";
 
 export default function PromptOfTheDayCard() {
   return (
-    <div className="card" style={{ background: "var(--accent-tint)", border: "1px solid var(--accent)" }}>
-      <span
-        className="text-secondary"
-        style={{ fontSize: "var(--text-xs)", textTransform: "uppercase", letterSpacing: "0.06em" }}
-      >
-        Today's mindset
-      </span>
-      <p style={{ fontSize: "var(--text-lg)", fontFamily: "var(--font-heading)", fontWeight: 500, marginTop: "var(--space-2)" }}>
-        {promptOfTheDay()}
-      </p>
-    </div>
+    <Panel>
+      <Label>Today's mindset</Label>
+      <p className={styles.prompt}>{promptOfTheDay()}</p>
+    </Panel>
   );
 }

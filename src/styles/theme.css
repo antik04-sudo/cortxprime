@@ -1,25 +1,30 @@
 :root {
   color-scheme: dark;
 
-  /* Surfaces */
-  --bg: #10131a;
-  --surface: #16202e;
-  --surface-raised: #1c2530;
-  --border: rgba(213, 219, 225, 0.08);
+  /* Surfaces — "void" / "panel" per the HUD design system */
+  --bg: #060a0f;
+  --surface: #0d1620;
+  --surface-raised: #14212e;
+  --surface-2: #0a121b;
+  --border: #1a2b38;
 
   /* Text */
-  --text-primary: #f6f8fa;
-  --text-secondary: #6b7580;
-  --text-tertiary: #6b7580;
+  --text-primary: #d7f4ff;
+  --text-secondary: #5a7a8c;
+  --text-tertiary: #5a7a8c;
 
-  /* Accent — single Signal Blue, used for buttons, links, active states, streaks */
-  --accent: #35a7d9;
-  --accent-tint: rgba(53, 167, 217, 0.14);
+  /* Accent — cyan, used for buttons, links, active states, streaks, glow */
+  --accent: #29e7ff;
+  --accent-dim: #12586a;
+  --accent-tint: rgba(41, 231, 255, 0.12);
 
-  --success: #35a7d9;
-  --danger: #ff5c5c;
+  --success: #29e7ff;
+  --warning: #ffb627;
+  --danger: #ff4655;
 
-  /* Radii */
+  /* Radii — legacy rounded system, still used by not-yet-restyled screens.
+     New HUD components (Panel/Button/etc in src/components/ui) hardcode their
+     own sharp/clipped geometry and don't read these. */
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
@@ -35,8 +40,9 @@
   --space-7: 48px;
 
   /* Type */
-  --font-heading: "Space Grotesk", system-ui, sans-serif;
+  --font-heading: "Orbitron", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -53,4 +59,8 @@
 
   --safe-top: env(safe-area-inset-top);
   --safe-bottom: env(safe-area-inset-bottom);
+
+  /* Desktop side-rail breakpoint — shared by AppShell and any HUD component
+     that needs to size up above it (Panel padding/bracket, CoreGauge, etc.) */
+  --desktop-breakpoint: 768px;
 }

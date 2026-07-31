@@ -1,0 +1,58 @@
+.card {
+  padding: 12px 14px;
+}
+
+.valueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.value {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.unit {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.trend {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  margin-top: 4px;
+}
+
+.cyan {
+  color: var(--accent);
+}
+
+.amber {
+  color: var(--warning);
+}
+
+.danger {
+  color: var(--danger);
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 14px 16px;
+  }
+
+  .value {
+    font-size: 26px;
+  }
+
+  .unit {
+    font-size: 12px;
+  }
+
+  .trend {
+    font-size: 11px;
+  }
+}

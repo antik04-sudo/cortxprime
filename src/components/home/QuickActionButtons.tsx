@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Button from "../ui/Button";
 
 const actions = [
   { to: "/journal/standard", label: "Log post-game journal", variant: "primary" as const },
@@ -12,14 +13,9 @@ export default function QuickActionButtons() {
   return (
     <div className="stack">
       {actions.map((action) => (
-        <button
-          key={action.to}
-          type="button"
-          className={`btn btn-block ${action.variant === "primary" ? "btn-primary" : "btn-secondary"}`}
-          onClick={() => navigate(action.to)}
-        >
+        <Button key={action.to} variant={action.variant} block onClick={() => navigate(action.to)}>
           {action.label}
-        </button>
+        </Button>
       ))}
     </div>
   );

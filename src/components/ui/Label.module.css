@@ -1,0 +1,16 @@
+.label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+@media (min-width: 768px) {
+  .label {
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    margin-bottom: 8px;
+  }
+}

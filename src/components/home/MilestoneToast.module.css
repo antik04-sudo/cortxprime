@@ -1,0 +1,23 @@
+.toast {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px var(--accent-dim);
+}
+
+.message {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dismiss {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: var(--text-lg);
+  cursor: pointer;
+  line-height: 1;
+}
