@@ -120,3 +120,12 @@ grant select (id, parent_id, username, sport, feeling_word, process_goal)
 -- onboarding via updateMyKidPrefs, which needs write access to this column.
 revoke update on public.kids from authenticated;
 grant update (feeling_word, process_goal, username) on public.kids to authenticated;
+
+-- ADDED: kid login no longer shows a public "pick your profile" list — the
+-- athlete now types their own username directly (KidLoginFlow.tsx), so
+-- kid_public_profiles (select id, username, sport from public.kids from
+-- earlier in this file) has no remaining caller. It was also, by design, the
+-- one thing anon could read unauthenticated — anyone with the public anon
+-- key (always visible client-side) could enumerate every athlete's username
+-- via it. Dropping it closes that off; nothing else depends on the view.
+drop view if exists public.kid_public_profiles;

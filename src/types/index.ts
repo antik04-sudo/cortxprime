@@ -48,13 +48,6 @@ export interface KidProfile {
   processGoal: string | null;
 }
 
-/** Public, column-limited row from the `kid_public_profiles` view (pre-login list). */
-export interface KidPublicProfile {
-  id: string;
-  username: string;
-  sport: string | null;
-}
-
 export interface SelfTalkScript {
   id: string;
   trigger: TriggerTag;

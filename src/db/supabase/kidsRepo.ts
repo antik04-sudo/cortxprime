@@ -1,5 +1,5 @@
 import { supabase } from "../../lib/supabaseClient";
-import type { KidProfile, KidPublicProfile } from "../../types";
+import type { KidProfile } from "../../types";
 
 interface KidRow {
   id: string;
@@ -17,16 +17,6 @@ function fromRow(row: KidRow): KidProfile {
     feelingWord: row.feeling_word,
     processGoal: row.process_goal,
   };
-}
-
-/** Pre-login "pick your profile" list — reads the public, column-limited view. */
-export async function listKidPublicProfiles(): Promise<KidPublicProfile[]> {
-  const { data, error } = await supabase
-    .from("kid_public_profiles")
-    .select("id, username, sport");
-
-  if (error) throw error;
-  return data as KidPublicProfile[];
 }
 
 /** The logged-in kid's own full profile (feeling word + process goal included). */

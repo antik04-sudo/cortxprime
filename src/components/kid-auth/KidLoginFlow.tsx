@@ -1,42 +1,33 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { listKidPublicProfiles } from "../../db/supabase/kidsRepo";
 import { useKidSession } from "../../state/KidSessionContext";
 import { hasAnyLocalData, isMigrationHandled } from "../../db/migrationRepo";
-import type { KidPublicProfile } from "../../types";
-import PanelButton from "../ui/PanelButton";
+import Button from "../ui/Button";
 import PinKeypad from "./PinKeypad";
 import styles from "./KidLoginFlow.module.css";
 
-type Step = "select" | "pin";
+type Step = "username" | "pin";
 
 export default function KidLoginFlow() {
   const { loginWithTokenHash } = useKidSession();
   const navigate = useNavigate();
 
-  const [step, setStep] = useState<Step>("select");
-  const [profiles, setProfiles] = useState<KidPublicProfile[]>([]);
-  const [loadingProfiles, setLoadingProfiles] = useState(true);
-  const [selected, setSelected] = useState<KidPublicProfile | null>(null);
+  const [step, setStep] = useState<Step>("username");
+  const [username, setUsername] = useState("");
   const [pin, setPin] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    listKidPublicProfiles()
-      .then(setProfiles)
-      .finally(() => setLoadingProfiles(false));
-  }, []);
+  const trimmedUsername = username.trim();
 
-  useEffect(() => {
-    if (pin.length === 4 && !submitting) {
-      handleSubmitPin();
+  function handlePinChange(value: string) {
+    setPin(value);
+    if (value.length === 4 && !submitting) {
+      handleSubmitPin(value);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pin]);
+  }
 
-  async function handleSubmitPin() {
-    if (!selected) return;
+  async function handleSubmitPin(pinValue: string) {
     setSubmitting(true);
     setError(null);
 
@@ -44,7 +35,7 @@ export default function KidLoginFlow() {
       const res = await fetch("/api/kid-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: selected.username, pin }),
+        body: JSON.stringify({ username: trimmedUsername, pin: pinValue }),
       });
       const body = await res.json();
 
@@ -78,48 +69,47 @@ export default function KidLoginFlow() {
     }
   }
 
-  if (step === "select") {
+  if (step === "username") {
     return (
       <div className="screen">
-        <h1>Who's this?</h1>
-        {loadingProfiles && <p className="text-secondary">Loading…</p>}
-        <div className="stack">
-          {profiles.map((profile) => (
-            <PanelButton
-              key={profile.id}
-              onClick={() => {
-                setSelected(profile);
-                setError(null);
-                setPin("");
-                setStep("pin");
-              }}
-            >
-              <span className={styles.username}>{profile.username}</span>
-              {profile.sport && (
-                <>
-                  <br />
-                  <span className={styles.sport}>{profile.sport}</span>
-                </>
-              )}
-            </PanelButton>
-          ))}
-          {!loadingProfiles && profiles.length === 0 && (
-            <p className="text-secondary">No profiles yet — ask a parent to set one up.</p>
-          )}
+        <h1>Log in</h1>
+
+        <div className="field">
+          <label htmlFor="kid-username">Username</label>
+          <input
+            id="kid-username"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            autoComplete="username"
+            onKeyDown={(e) => e.key === "Enter" && trimmedUsername && setStep("pin")}
+          />
         </div>
+
+        <Button block disabled={!trimmedUsername} onClick={() => setStep("pin")}>
+          Continue
+        </Button>
       </div>
     );
   }
 
   return (
     <div className="screen" style={{ justifyContent: "center", textAlign: "center", gap: "var(--space-5)" }}>
-      <button type="button" onClick={() => setStep("select")} className={styles.back}>
-        ← Not {selected?.username}?
+      <button
+        type="button"
+        onClick={() => {
+          setStep("username");
+          setPin("");
+          setError(null);
+        }}
+        className={styles.back}
+      >
+        ← Not {trimmedUsername}?
       </button>
 
       <h1 style={{ fontSize: "var(--text-xl)" }}>Enter your PIN</h1>
 
-      <PinKeypad value={pin} onChange={setPin} disabled={submitting} />
+      <PinKeypad value={pin} onChange={handlePinChange} disabled={submitting} />
 
       {error && <p style={{ color: "var(--danger)", fontSize: "var(--text-sm)" }}>{error}</p>}
     </div>
