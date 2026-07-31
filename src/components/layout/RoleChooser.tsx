@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Zap } from "lucide-react";
 import { useParentAuth } from "../../state/ParentAuthContext";
 import { useKidSession } from "../../state/KidSessionContext";
+import Button from "../ui/Button";
+import styles from "./RoleChooser.module.css";
 
 export default function RoleChooser() {
   const { user, loading: parentLoading } = useParentAuth();
@@ -22,14 +25,20 @@ export default function RoleChooser() {
 
   return (
     <div className="screen" style={{ justifyContent: "center", textAlign: "center", gap: "var(--space-6)" }}>
-      <h1 style={{ fontSize: "var(--text-2xl)" }}>Welcome to CortXPrime</h1>
+      <div className="stack" style={{ gap: "var(--space-2)" }}>
+        <div className={styles.wordmark}>
+          <Zap size={26} className={styles.wordmarkIcon} />
+          CORTX<span className={styles.wordmarkAccent}>PRIME</span>
+        </div>
+        <div className={styles.tagline}>Mindset OS for young athletes</div>
+      </div>
       <div className="stack">
-        <button type="button" className="btn btn-primary btn-block" onClick={() => navigate("/kid/login")}>
+        <Button block onClick={() => navigate("/kid/login")}>
           I'm an Athlete
-        </button>
-        <button type="button" className="btn btn-secondary btn-block" onClick={() => navigate("/parent/login")}>
+        </Button>
+        <Button variant="secondary" block onClick={() => navigate("/parent/login")}>
           I'm a parent
-        </button>
+        </Button>
       </div>
     </div>
   );

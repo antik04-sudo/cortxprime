@@ -6,16 +6,17 @@
 }
 
 .dot {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  border: 2px solid var(--text-secondary);
-  transition: background 0.1s ease, border-color 0.1s ease;
+  border: 2px solid var(--border);
+  transition: background 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease;
 }
 
 .dot.filled {
   background: var(--accent);
   border-color: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
 }
 
 .grid {
@@ -29,8 +30,8 @@
 
 .key {
   min-height: 64px;
-  border-radius: var(--radius-md);
-  background: var(--surface-raised);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text-primary);
   font-family: var(--font-heading);
@@ -40,7 +41,8 @@
 }
 
 .key:active {
-  background: var(--surface);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent-dim);
 }
 
 .keyEmpty {

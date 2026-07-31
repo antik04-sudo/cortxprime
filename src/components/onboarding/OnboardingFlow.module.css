@@ -1,0 +1,31 @@
+.welcome {
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-7);
+}
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+}
+
+.wordmarkIcon {
+  color: var(--accent);
+  filter: drop-shadow(0 0 10px var(--accent));
+}
+
+.wordmarkAccent {
+  color: var(--accent);
+}
+
+.welcomeMessage {
+  font-size: var(--text-2xl);
+  color: var(--text-primary);
+}

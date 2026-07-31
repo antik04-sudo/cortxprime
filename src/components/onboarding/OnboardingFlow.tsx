@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Zap } from "lucide-react";
 import { useKidSession } from "../../state/KidSessionContext";
 import { updateMyKidPrefs } from "../../db/supabase/kidsRepo";
 import { onboarding } from "../../content/copy";
 import ProcessGoalPicker from "./ProcessGoalPicker";
+import Button from "../ui/Button";
+import styles from "./OnboardingFlow.module.css";
 
 export default function OnboardingFlow() {
   const { kid, refreshKid } = useKidSession();
@@ -34,26 +37,15 @@ export default function OnboardingFlow() {
 
   if (step === "welcome") {
     return (
-      <div
-        className="screen"
-        style={{
-          justifyContent: "center",
-          textAlign: "center",
-          gap: "var(--space-7)",
-          background: "#f6f8fa",
-          color: "var(--bg)",
-          minHeight: "100dvh",
-        }}
-      >
-        <img
-          src="/logo-lockup-400.png"
-          alt="CortXPrime"
-          style={{ width: "min(280px, 70%)", margin: "var(--space-6) auto 0" }}
-        />
-        <h1 style={{ fontSize: "var(--text-2xl)", color: "var(--bg)" }}>{onboarding.welcomeMessage}</h1>
-        <button type="button" className="btn btn-primary btn-block" onClick={() => navigate("/home")}>
+      <div className={`screen ${styles.welcome}`}>
+        <div className={styles.wordmark}>
+          <Zap size={26} className={styles.wordmarkIcon} />
+          CORTX<span className={styles.wordmarkAccent}>PRIME</span>
+        </div>
+        <h1 className={styles.welcomeMessage}>{onboarding.welcomeMessage}</h1>
+        <Button block onClick={() => navigate("/home")}>
           Let's go
-        </button>
+        </Button>
       </div>
     );
   }
@@ -93,14 +85,9 @@ export default function OnboardingFlow() {
         <ProcessGoalPicker value={processGoal} onChange={setProcessGoal} />
       </div>
 
-      <button
-        type="button"
-        className="btn btn-primary btn-block"
-        disabled={!canSubmit || submitting}
-        onClick={handleSubmit}
-      >
+      <Button block disabled={!canSubmit || submitting} onClick={handleSubmit}>
         {submitting ? "Saving…" : "Set it up"}
-      </button>
+      </Button>
     </div>
   );
 }

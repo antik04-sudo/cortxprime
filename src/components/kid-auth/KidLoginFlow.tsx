@@ -4,7 +4,9 @@ import { listKidPublicProfiles } from "../../db/supabase/kidsRepo";
 import { useKidSession } from "../../state/KidSessionContext";
 import { hasAnyLocalData, isMigrationHandled } from "../../db/migrationRepo";
 import type { KidPublicProfile } from "../../types";
+import PanelButton from "../ui/PanelButton";
 import PinKeypad from "./PinKeypad";
+import styles from "./KidLoginFlow.module.css";
 
 type Step = "select" | "pin";
 
@@ -83,11 +85,8 @@ export default function KidLoginFlow() {
         {loadingProfiles && <p className="text-secondary">Loading…</p>}
         <div className="stack">
           {profiles.map((profile) => (
-            <button
+            <PanelButton
               key={profile.id}
-              type="button"
-              className="card"
-              style={{ textAlign: "left", cursor: "pointer" }}
               onClick={() => {
                 setSelected(profile);
                 setError(null);
@@ -95,16 +94,14 @@ export default function KidLoginFlow() {
                 setStep("pin");
               }}
             >
-              <strong style={{ fontFamily: "var(--font-heading)" }}>{profile.username}</strong>
+              <span className={styles.username}>{profile.username}</span>
               {profile.sport && (
                 <>
                   <br />
-                  <span className="text-secondary" style={{ fontSize: "var(--text-sm)" }}>
-                    {profile.sport}
-                  </span>
+                  <span className={styles.sport}>{profile.sport}</span>
                 </>
               )}
-            </button>
+            </PanelButton>
           ))}
           {!loadingProfiles && profiles.length === 0 && (
             <p className="text-secondary">No profiles yet — ask a parent to set one up.</p>
@@ -116,18 +113,7 @@ export default function KidLoginFlow() {
 
   return (
     <div className="screen" style={{ justifyContent: "center", textAlign: "center", gap: "var(--space-5)" }}>
-      <button
-        type="button"
-        onClick={() => setStep("select")}
-        style={{
-          background: "none",
-          border: "none",
-          color: "var(--text-secondary)",
-          fontSize: "var(--text-sm)",
-          cursor: "pointer",
-          alignSelf: "flex-start",
-        }}
-      >
+      <button type="button" onClick={() => setStep("select")} className={styles.back}>
         ← Not {selected?.username}?
       </button>
 

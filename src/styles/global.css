@@ -138,16 +138,21 @@ a {
 }
 
 .field label {
-  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-secondary);
   font-weight: 500;
 }
 
 .field input[type="text"],
-.field textarea {
-  background: var(--surface-raised);
+.field input[type="password"],
+.field textarea,
+.field select {
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
   padding: var(--space-3) var(--space-4);
   color: var(--text-primary);
   font-size: var(--text-md);
@@ -181,13 +186,15 @@ a {
   display: inline-flex;
   align-items: center;
   padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-pill);
-  background: var(--surface-raised);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  background: var(--surface);
   border: 1px solid var(--border);
-  font-size: var(--text-sm);
-  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
   cursor: pointer;
   min-height: var(--tap-min);
+  color: var(--text-secondary);
 }
 
 .chip[aria-pressed="true"] {
