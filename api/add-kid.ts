@@ -43,14 +43,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   const parentId = userData.user.id;
 
-  const { username, pin, sport } = req.body ?? {};
-  const trimmedUsername = typeof username === "string" ? username.trim() : "";
+  const { pin, sport } = req.body ?? {};
   const trimmedSport = typeof sport === "string" ? sport.trim() : "";
 
-  if (!trimmedUsername) {
-    res.status(400).json({ error: "Username is required" });
-    return;
-  }
   if (typeof pin !== "string" || !PIN_PATTERN.test(pin)) {
     res.status(400).json({ error: "PIN must be exactly 4 digits" });
     return;
@@ -73,16 +68,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const { data: usernameMatches, error: usernameCheckError } = await supabaseAdmin
-    .from("kids")
-    .select("id")
-    .eq("username", trimmedUsername);
-  if (usernameCheckError) {
-    res.status(500).json({ error: "Could not check username" });
-    return;
+  // Parents no longer choose the athlete's username (minimizing PII collected
+  // up front) — a placeholder is generated here and the athlete picks their
+  // own real username during onboarding (see OnboardingFlow.tsx).
+  let placeholderUsername = "";
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const candidate = `NewAthlete${Math.floor(1000 + Math.random() * 9000)}`;
+    const { data: matches, error: checkError } = await supabaseAdmin
+      .from("kids")
+      .select("id")
+      .eq("username", candidate);
+    if (checkError) {
+      res.status(500).json({ error: "Could not generate username" });
+      return;
+    }
+    if ((matches?.length ?? 0) === 0) {
+      placeholderUsername = candidate;
+      break;
+    }
   }
-  if ((usernameMatches?.length ?? 0) > 0) {
-    res.status(409).json({ error: "That username is already taken" });
+  if (!placeholderUsername) {
+    res.status(500).json({ error: "Could not generate a unique username, try again" });
     return;
   }
 
@@ -106,7 +112,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .insert({
       id: kidAuthId,
       parent_id: parentId,
-      username: trimmedUsername,
+      username: placeholderUsername,
       pin_hash: pinHash,
       sport: trimmedSport,
       auth_email: syntheticEmail,

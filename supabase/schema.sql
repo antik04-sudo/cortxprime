@@ -113,3 +113,10 @@ alter table public.kids add column auth_email text;
 revoke select on public.kids from authenticated, anon;
 grant select (id, parent_id, username, sport, feeling_word, process_goal)
   on public.kids to authenticated;
+
+-- ADDED: parents no longer choose the athlete's username in Add Kid (to
+-- minimize PII collected up front) — api/add-kid.ts inserts a placeholder
+-- (NewAthlete####) and the athlete picks their own real username during
+-- onboarding via updateMyKidPrefs, which needs write access to this column.
+revoke update on public.kids from authenticated;
+grant update (feeling_word, process_goal, username) on public.kids to authenticated;

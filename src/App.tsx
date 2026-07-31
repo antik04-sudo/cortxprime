@@ -12,6 +12,8 @@ import SelfTalkScripts from "./components/selftalk/SelfTalkScripts";
 import ProgressScreen from "./components/progress/ProgressScreen";
 import ParentSignup from "./components/parent/ParentSignup";
 import ParentLogin from "./components/parent/ParentLogin";
+import ForgotPassword from "./components/parent/ForgotPassword";
+import SetPassword from "./components/parent/SetPassword";
 import ParentDashboard from "./components/parent/ParentDashboard";
 import KidLoginFlow from "./components/kid-auth/KidLoginFlow";
 import AdminFamilies from "./components/admin/AdminFamilies";
@@ -89,6 +91,17 @@ export default function App() {
             {/* Parent auth */}
             <Route path="/parent/signup" element={<ParentSignup />} />
             <Route path="/parent/login" element={<ParentLogin />} />
+            <Route path="/parent/forgot-password" element={<ForgotPassword />} />
+            {/* Reached via an invite or password-recovery email link — a
+                session already exists by the time they land here */}
+            <Route
+              path="/parent/set-password"
+              element={
+                <RequireParent>
+                  <SetPassword />
+                </RequireParent>
+              }
+            />
             <Route
               path="/parent/dashboard"
               element={

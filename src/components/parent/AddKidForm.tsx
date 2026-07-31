@@ -9,13 +9,12 @@ const PIN_PATTERN = /^\d{4}$/;
 export default function AddKidForm({ onAdded }: { onAdded: () => void }) {
   const { session } = useParentAuth();
 
-  const [username, setUsername] = useState("");
   const [pin, setPin] = useState("");
   const [sport, setSport] = useState<string>(SPORTS[0]);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const canSubmit = username.trim().length > 0 && PIN_PATTERN.test(pin);
+  const canSubmit = PIN_PATTERN.test(pin);
 
   async function handleSubmit() {
     if (!session) return;
@@ -28,7 +27,7 @@ export default function AddKidForm({ onAdded }: { onAdded: () => void }) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.access_token}`,
       },
-      body: JSON.stringify({ username: username.trim(), pin, sport }),
+      body: JSON.stringify({ pin, sport }),
     });
 
     setSubmitting(false);
@@ -39,7 +38,6 @@ export default function AddKidForm({ onAdded }: { onAdded: () => void }) {
       return;
     }
 
-    setUsername("");
     setPin("");
     setSport(SPORTS[0]);
     onAdded();
@@ -48,11 +46,6 @@ export default function AddKidForm({ onAdded }: { onAdded: () => void }) {
   return (
     <Panel className="stack">
       <h2 style={{ fontSize: "var(--text-lg)" }}>Add a kid profile</h2>
-
-      <div className="field">
-        <label htmlFor="kid-username">Username</label>
-        <input id="kid-username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-      </div>
 
       <div className="field">
         <label htmlFor="kid-pin">4-digit PIN</label>
@@ -76,6 +69,10 @@ export default function AddKidForm({ onAdded }: { onAdded: () => void }) {
           ))}
         </select>
       </div>
+
+      <p className="text-secondary" style={{ fontSize: "var(--text-sm)" }}>
+        They'll choose their own username the first time they log in.
+      </p>
 
       {error && <p style={{ color: "var(--danger)", fontSize: "var(--text-sm)" }}>{error}</p>}
 

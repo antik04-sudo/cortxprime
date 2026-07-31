@@ -41,16 +41,23 @@ export async function getMyKidProfile(kidId: string): Promise<KidProfile | null>
   return data ? fromRow(data as KidRow) : null;
 }
 
-/** Kids may only ever update these two columns on their own row (DB-enforced via column grant). */
+/**
+ * Kids may only ever update these three columns on their own row (DB-enforced
+ * via column grant, not just RLS — see schema.sql). `username` is optional so
+ * the migration flow (which only ever sets feelingWord/processGoal from
+ * migrated Phase-1 data) can keep calling this without touching it.
+ */
 export async function updateMyKidPrefs(
   kidId: string,
-  prefs: { feelingWord: string; processGoal: string }
+  prefs: { username?: string; feelingWord: string; processGoal: string }
 ): Promise<void> {
-  const { error } = await supabase
-    .from("kids")
-    .update({ feeling_word: prefs.feelingWord, process_goal: prefs.processGoal })
-    .eq("id", kidId);
+  const update: Record<string, string> = {
+    feeling_word: prefs.feelingWord,
+    process_goal: prefs.processGoal,
+  };
+  if (prefs.username) update.username = prefs.username;
 
+  const { error } = await supabase.from("kids").update(update).eq("id", kidId);
   if (error) throw error;
 }
 

@@ -58,6 +58,10 @@ export default function ParentLogin() {
       </Button>
 
       <p className="text-secondary text-center" style={{ fontSize: "var(--text-sm)" }}>
+        <Link to="/parent/forgot-password">Forgot password?</Link>
+      </p>
+
+      <p className="text-secondary text-center" style={{ fontSize: "var(--text-sm)" }}>
         No account yet? <Link to="/parent/signup">Sign up</Link>
       </p>
     </div>
