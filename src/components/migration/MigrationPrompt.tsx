@@ -15,6 +15,8 @@ import { upsertStreak } from "../../db/supabase/streaksRepo";
 import { updateMyKidPrefs } from "../../db/supabase/kidsRepo";
 import { computeStreak } from "../../utils/streak";
 import { dayKey } from "../../utils/date";
+import Panel from "../ui/Panel";
+import Button from "../ui/Button";
 
 export default function MigrationPrompt() {
   const { kid, refreshKid } = useKidSession();
@@ -89,7 +91,7 @@ export default function MigrationPrompt() {
       ) : (
         <div className="stack">
           {profiles.map((summary) => (
-            <div key={summary.profile.id} className="card stack">
+            <Panel key={summary.profile.id} className="stack">
               <div>
                 <strong style={{ fontFamily: "var(--font-heading)" }}>{summary.profile.name}</strong>
                 <br />
@@ -97,27 +99,17 @@ export default function MigrationPrompt() {
                   {summary.profile.sport} · {summary.entryCount} entries · {summary.favoriteCount} favorites
                 </span>
               </div>
-              <button
-                type="button"
-                className="btn btn-primary btn-block"
-                disabled={busyProfileId !== null}
-                onClick={() => handleMigrate(summary)}
-              >
+              <Button block disabled={busyProfileId !== null} onClick={() => handleMigrate(summary)}>
                 {busyProfileId === summary.profile.id ? "Migrating…" : "This was me"}
-              </button>
-            </div>
+              </Button>
+            </Panel>
           ))}
         </div>
       )}
 
-      <button
-        type="button"
-        className="btn btn-secondary btn-block"
-        disabled={busyProfileId !== null}
-        onClick={handleSkip}
-      >
+      <Button variant="secondary" block disabled={busyProfileId !== null} onClick={handleSkip}>
         None of these were me
-      </button>
+      </Button>
     </div>
   );
 }

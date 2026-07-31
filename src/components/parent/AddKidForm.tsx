@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useParentAuth } from "../../state/ParentAuthContext";
 import { SPORTS } from "../../constants/sports";
+import Panel from "../ui/Panel";
+import Button from "../ui/Button";
 
 const PIN_PATTERN = /^\d{4}$/;
 
@@ -44,7 +46,7 @@ export default function AddKidForm({ onAdded }: { onAdded: () => void }) {
   }
 
   return (
-    <div className="card stack">
+    <Panel className="stack">
       <h2 style={{ fontSize: "var(--text-lg)" }}>Add a kid profile</h2>
 
       <div className="field">
@@ -66,21 +68,7 @@ export default function AddKidForm({ onAdded }: { onAdded: () => void }) {
 
       <div className="field">
         <label htmlFor="kid-sport">Sport</label>
-        <select
-          id="kid-sport"
-          value={sport}
-          onChange={(e) => setSport(e.target.value)}
-          style={{
-            background: "var(--surface-raised)",
-            border: "1px solid var(--border)",
-            borderRadius: "var(--radius-md)",
-            padding: "var(--space-3) var(--space-4)",
-            color: "var(--text-primary)",
-            fontSize: "var(--text-md)",
-            fontFamily: "inherit",
-            minHeight: "var(--tap-min)",
-          }}
-        >
+        <select id="kid-sport" value={sport} onChange={(e) => setSport(e.target.value)}>
           {SPORTS.map((s) => (
             <option key={s} value={s}>
               {s}
@@ -91,14 +79,9 @@ export default function AddKidForm({ onAdded }: { onAdded: () => void }) {
 
       {error && <p style={{ color: "var(--danger)", fontSize: "var(--text-sm)" }}>{error}</p>}
 
-      <button
-        type="button"
-        className="btn btn-primary btn-block"
-        disabled={!canSubmit || submitting}
-        onClick={handleSubmit}
-      >
+      <Button block disabled={!canSubmit || submitting} onClick={handleSubmit}>
         {submitting ? "Adding…" : "Add kid"}
-      </button>
-    </div>
+      </Button>
+    </Panel>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useParentAuth } from "../../state/ParentAuthContext";
+import Button from "../ui/Button";
 
 export default function ParentLogin() {
   const { signIn } = useParentAuth();
@@ -52,14 +53,9 @@ export default function ParentLogin() {
 
       {error && <p style={{ color: "var(--danger)", fontSize: "var(--text-sm)" }}>{error}</p>}
 
-      <button
-        type="button"
-        className="btn btn-primary btn-block"
-        disabled={!email.trim() || !password || submitting}
-        onClick={handleSubmit}
-      >
+      <Button block disabled={!email.trim() || !password || submitting} onClick={handleSubmit}>
         {submitting ? "Logging in…" : "Log in"}
-      </button>
+      </Button>
 
       <p className="text-secondary text-center" style={{ fontSize: "var(--text-sm)" }}>
         No account yet? <Link to="/parent/signup">Sign up</Link>

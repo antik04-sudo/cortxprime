@@ -5,6 +5,9 @@ import { listMyKids } from "../../db/supabase/kidsRepo";
 import { listEntriesForProfile } from "../../db/supabase/entriesRepo";
 import type { KidProfile, SupabaseJournalEntry } from "../../types";
 import AddKidForm from "./AddKidForm";
+import PanelButton from "../ui/PanelButton";
+import EntryList from "../ui/EntryList";
+import Button from "../ui/Button";
 
 const MAX_KIDS = 2;
 
@@ -45,58 +48,12 @@ export default function ParentDashboard() {
   if (selectedKid) {
     return (
       <div className="screen">
-        <button
-          type="button"
-          onClick={() => setSelectedKid(null)}
-          style={{
-            background: "none",
-            border: "none",
-            color: "var(--text-secondary)",
-            fontSize: "var(--text-sm)",
-            cursor: "pointer",
-            alignSelf: "flex-start",
-          }}
-        >
+        <button type="button" onClick={() => setSelectedKid(null)} className="text-btn" style={{ alignSelf: "flex-start" }}>
           ← Back to your family
         </button>
         <h1 style={{ fontSize: "var(--text-xl)" }}>{selectedKid.username}'s entries</h1>
 
-        {entriesLoading ? (
-          <p className="text-secondary">Loading…</p>
-        ) : entries.length === 0 ? (
-          <p className="text-secondary">No entries yet.</p>
-        ) : (
-          <div className="stack">
-            {entries.map((entry) => (
-              <div key={entry.id} className="card">
-                <div
-                  style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)" }}
-                  className="text-secondary"
-                >
-                  <span>{entry.entryType.replace(/_/g, " ")}</span>
-                  <span>{entry.context ?? "—"}</span>
-                </div>
-                <p style={{ fontSize: "var(--text-sm)", marginTop: "var(--space-2)" }}>
-                  {new Date(entry.timestamp).toLocaleString()}
-                </p>
-                {entry.feltWord && (
-                  <p style={{ fontSize: "var(--text-sm)", marginTop: "var(--space-2)" }}>
-                    Felt: {entry.feltWord}
-                  </p>
-                )}
-                <div className="stack" style={{ marginTop: "var(--space-3)" }}>
-                  {[entry.answers.q1, entry.answers.q2, entry.answers.q3]
-                    .filter(Boolean)
-                    .map((answer, i) => (
-                      <p key={i} style={{ fontSize: "var(--text-sm)" }}>
-                        {answer}
-                      </p>
-                    ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {entriesLoading ? <p className="text-secondary">Loading…</p> : <EntryList entries={entries} />}
       </div>
     );
   }
@@ -105,17 +62,7 @@ export default function ParentDashboard() {
     <div className="screen">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1 style={{ fontSize: "var(--text-xl)" }}>Your family</h1>
-        <button
-          type="button"
-          onClick={handleSignOut}
-          style={{
-            background: "none",
-            border: "none",
-            color: "var(--text-secondary)",
-            fontSize: "var(--text-sm)",
-            cursor: "pointer",
-          }}
-        >
+        <button type="button" onClick={handleSignOut} className="text-btn">
           Sign out
         </button>
       </div>
@@ -125,13 +72,9 @@ export default function ParentDashboard() {
       </p>
 
       {isAdmin && (
-        <button
-          type="button"
-          className="btn btn-secondary btn-block"
-          onClick={() => navigate("/admin")}
-        >
+        <Button variant="secondary" block onClick={() => navigate("/admin")}>
           Admin: view all families
-        </button>
+        </Button>
       )}
 
       {loading ? (
@@ -139,19 +82,13 @@ export default function ParentDashboard() {
       ) : (
         <div className="stack">
           {kids.map((kid) => (
-            <button
-              key={kid.id}
-              type="button"
-              className="card"
-              style={{ textAlign: "left", cursor: "pointer", width: "100%" }}
-              onClick={() => handleSelectKid(kid)}
-            >
+            <PanelButton key={kid.id} onClick={() => handleSelectKid(kid)}>
               <strong style={{ fontFamily: "var(--font-heading)" }}>{kid.username}</strong>
               <br />
               <span className="text-secondary" style={{ fontSize: "var(--text-sm)" }}>
                 {kid.sport ?? "No sport set"}
               </span>
-            </button>
+            </PanelButton>
           ))}
           {kids.length === 0 && <p className="text-secondary">No kid profiles yet.</p>}
         </div>

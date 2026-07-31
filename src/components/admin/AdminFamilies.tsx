@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useParentAuth } from "../../state/ParentAuthContext";
 import { listEntriesForProfile } from "../../db/supabase/entriesRepo";
 import type { SupabaseJournalEntry } from "../../types";
+import Panel from "../ui/Panel";
+import PanelButton from "../ui/PanelButton";
+import EntryList from "../ui/EntryList";
 
 interface Kid {
   id: string;
@@ -59,48 +62,12 @@ export default function AdminFamilies() {
   if (selectedKid) {
     return (
       <div className="screen">
-        <button
-          type="button"
-          onClick={() => setSelectedKid(null)}
-          style={{ background: "none", border: "none", color: "var(--text-secondary)", fontSize: "var(--text-sm)", cursor: "pointer", alignSelf: "flex-start" }}
-        >
+        <button type="button" onClick={() => setSelectedKid(null)} className="text-btn" style={{ alignSelf: "flex-start" }}>
           ← Back to families
         </button>
         <h1 style={{ fontSize: "var(--text-xl)" }}>{selectedKid.username}'s entries</h1>
 
-        {entriesLoading ? (
-          <p className="text-secondary">Loading…</p>
-        ) : entries.length === 0 ? (
-          <p className="text-secondary">No entries yet.</p>
-        ) : (
-          <div className="stack">
-            {entries.map((entry) => (
-              <div key={entry.id} className="card">
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)" }} className="text-secondary">
-                  <span>{entry.entryType.replace(/_/g, " ")}</span>
-                  <span>{entry.context ?? "—"}</span>
-                </div>
-                <p style={{ fontSize: "var(--text-sm)", marginTop: "var(--space-2)" }}>
-                  {new Date(entry.timestamp).toLocaleString()}
-                </p>
-                {entry.feltWord && (
-                  <p style={{ fontSize: "var(--text-sm)", marginTop: "var(--space-2)" }}>
-                    Felt: {entry.feltWord}
-                  </p>
-                )}
-                <div className="stack" style={{ marginTop: "var(--space-3)" }}>
-                  {[entry.answers.q1, entry.answers.q2, entry.answers.q3]
-                    .filter(Boolean)
-                    .map((answer, i) => (
-                      <p key={i} style={{ fontSize: "var(--text-sm)" }}>
-                        {answer}
-                      </p>
-                    ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {entriesLoading ? <p className="text-secondary">Loading…</p> : <EntryList entries={entries} />}
       </div>
     );
   }
@@ -113,7 +80,7 @@ export default function AdminFamilies() {
 
       <div className="stack">
         {families.map((family) => (
-          <div key={family.parentId} className="card">
+          <Panel key={family.parentId}>
             <button
               type="button"
               onClick={() =>
@@ -142,20 +109,7 @@ export default function AdminFamilies() {
             {expandedParentId === family.parentId && (
               <div className="stack" style={{ marginTop: "var(--space-4)" }}>
                 {family.kids.map((kid) => (
-                  <button
-                    key={kid.id}
-                    type="button"
-                    onClick={() => handleSelectKid(kid)}
-                    style={{
-                      background: "var(--surface-raised)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "var(--radius-md)",
-                      padding: "var(--space-3) var(--space-4)",
-                      color: "var(--text-primary)",
-                      textAlign: "left",
-                      cursor: "pointer",
-                    }}
-                  >
+                  <PanelButton key={kid.id} onClick={() => handleSelectKid(kid)}>
                     {kid.username}
                     {kid.sport && (
                       <span className="text-secondary" style={{ fontSize: "var(--text-sm)" }}>
@@ -163,11 +117,11 @@ export default function AdminFamilies() {
                         · {kid.sport}
                       </span>
                     )}
-                  </button>
+                  </PanelButton>
                 ))}
               </div>
             )}
-          </div>
+          </Panel>
         ))}
         {families.length === 0 && <p className="text-secondary">No families yet.</p>}
       </div>

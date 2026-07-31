@@ -22,14 +22,6 @@
   --warning: #ffb627;
   --danger: #ff4655;
 
-  /* Radii — legacy rounded system, still used by not-yet-restyled screens.
-     New HUD components (Panel/Button/etc in src/components/ui) hardcode their
-     own sharp/clipped geometry and don't read these. */
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-pill: 999px;
-
   /* Spacing */
   --space-1: 4px;
   --space-2: 8px;
@@ -51,9 +43,6 @@
   --text-xl: 1.5rem;
   --text-2xl: 2rem;
   --text-3xl: 2.5rem;
-
-  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-raised: 0 12px 32px rgba(0, 0, 0, 0.45);
 
   --tap-min: 44px;
 

@@ -1,0 +1,27 @@
+.meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.timestamp {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+}
+
+.felt {
+  font-size: var(--text-sm);
+  color: var(--accent);
+  margin-top: var(--space-2);
+}
+
+.answer {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
