@@ -1,4 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft, X } from "lucide-react";
+import Panel from "../ui/Panel";
+import Button from "../ui/Button";
+import styles from "./QuestionStep.module.css";
 
 interface QuestionStepProps {
   question: string;
@@ -32,40 +36,31 @@ export default function QuestionStep({
           type="button"
           onClick={() => (onBack ? onBack() : navigate(exitTo))}
           aria-label={onBack ? "Back" : "Close"}
-          style={{ background: "none", border: "none", color: "var(--text-secondary)", fontSize: "var(--text-lg)", cursor: "pointer", padding: "var(--space-2)" }}
+          className={styles.iconBtn}
         >
-          {onBack ? "←" : "×"}
+          {onBack ? <ArrowLeft size={20} /> : <X size={20} />}
         </button>
-        <span className="text-secondary" style={{ fontSize: "var(--text-sm)" }}>
-          {stepLabel}
-        </span>
+        <span className={styles.stepLabel}>{stepLabel}</span>
       </div>
 
       <h1 style={{ fontSize: "var(--text-xl)" }}>{question}</h1>
       {helperText && <p className="text-secondary">{helperText}</p>}
 
-      <textarea
-        autoFocus
-        rows={5}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="branded-textarea"
-        style={{
-          background: "var(--surface-raised)",
-          border: "1px solid var(--border)",
-          borderRadius: "var(--radius-md)",
-          padding: "var(--space-4)",
-          color: "var(--text-primary)",
-          fontSize: "var(--text-md)",
-          fontFamily: "inherit",
-        }}
-      />
+      <Panel className={styles.textareaPanel}>
+        <textarea
+          autoFocus
+          rows={5}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={styles.textarea}
+        />
+      </Panel>
 
       <div style={{ flex: 1 }} />
 
-      <button type="button" className="btn btn-primary btn-block" disabled={!value.trim()} onClick={onNext}>
+      <Button block disabled={!value.trim()} onClick={onNext}>
         {nextLabel}
-      </button>
+      </Button>
     </div>
   );
 }

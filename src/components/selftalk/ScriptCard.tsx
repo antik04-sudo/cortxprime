@@ -1,5 +1,9 @@
+import { Star } from "lucide-react";
 import type { SelfTalkScript } from "../../types";
 import { triggerLabels } from "../../content/selfTalkScripts";
+import Panel from "../ui/Panel";
+import Label from "../ui/Label";
+import styles from "./ScriptCard.module.css";
 
 export default function ScriptCard({
   script,
@@ -11,32 +15,20 @@ export default function ScriptCard({
   onToggleFavorite: () => void;
 }) {
   return (
-    <div className="card" style={{ display: "flex", justifyContent: "space-between", gap: "var(--space-3)" }}>
+    <Panel className={styles.card}>
       <div>
-        <span className="text-secondary" style={{ fontSize: "var(--text-xs)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-          {triggerLabels[script.trigger]}
-        </span>
-        <p style={{ fontSize: "var(--text-lg)", fontFamily: "var(--font-heading)", fontWeight: 500, marginTop: "var(--space-1)" }}>
-          "{script.text}"
-        </p>
+        <Label>{triggerLabels[script.trigger]}</Label>
+        <p className={styles.quote}>"{script.text}"</p>
       </div>
       <button
         type="button"
         onClick={onToggleFavorite}
         aria-label={isFavorited ? "Unfavorite" : "Favorite"}
         aria-pressed={isFavorited}
-        style={{
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          fontSize: "var(--text-xl)",
-          color: isFavorited ? "var(--accent)" : "var(--text-tertiary)",
-          minWidth: "var(--tap-min)",
-          minHeight: "var(--tap-min)",
-        }}
+        className={styles.favorite}
       >
-        {isFavorited ? "★" : "☆"}
+        <Star size={20} fill={isFavorited ? "currentColor" : "none"} />
       </button>
-    </div>
+    </Panel>
   );
 }

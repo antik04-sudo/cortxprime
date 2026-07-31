@@ -1,0 +1,28 @@
+.close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+}
+
+.tile {
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  text-align: center;
+}
+
+.tilePrimary {
+  border-color: var(--accent);
+  color: var(--accent);
+}

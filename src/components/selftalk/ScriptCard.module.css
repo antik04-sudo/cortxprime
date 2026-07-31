@@ -1,0 +1,31 @@
+.card {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.quote {
+  font-size: var(--text-lg);
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-top: var(--space-1);
+}
+
+.favorite {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.favorite[aria-pressed="true"] {
+  color: var(--accent);
+  filter: drop-shadow(0 0 4px var(--accent));
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { postLoss } from "../../content/copy";
+import Button from "../ui/Button";
 import styles from "./BreathingExercise.module.css";
 
 const PHASES = [
@@ -50,9 +51,9 @@ export default function BreathingExercise({ onComplete }: { onComplete: () => vo
     return (
       <div className="screen" style={{ justifyContent: "center", textAlign: "center", gap: "var(--space-6)" }}>
         <h1 style={{ fontSize: "var(--text-xl)" }}>{postLoss.breathingIntro}</h1>
-        <button type="button" className="btn btn-primary btn-block" onClick={() => setStarted(true)}>
+        <Button block onClick={() => setStarted(true)}>
           Start
-        </button>
+        </Button>
       </div>
     );
   }

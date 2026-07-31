@@ -1,3 +1,7 @@
+import Panel from "../ui/Panel";
+import Button from "../ui/Button";
+import styles from "./JournalCompletion.module.css";
+
 export default function JournalCompletion({
   message,
   onContinue,
@@ -6,11 +10,13 @@ export default function JournalCompletion({
   onContinue: () => void;
 }) {
   return (
-    <div className="screen" style={{ justifyContent: "center", textAlign: "center", gap: "var(--space-6)" }}>
-      <h1 style={{ fontSize: "var(--text-2xl)" }}>{message}</h1>
-      <button type="button" className="btn btn-primary btn-block" onClick={onContinue}>
+    <div className="screen" style={{ justifyContent: "center", gap: "var(--space-6)" }}>
+      <Panel className={styles.panel}>
+        <p className={styles.message}>{message}</p>
+      </Panel>
+      <Button block onClick={onContinue}>
         Done
-      </button>
+      </Button>
     </div>
   );
 }

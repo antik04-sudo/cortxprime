@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
+import PanelButton from "../ui/PanelButton";
 import type { EntryContext } from "../../types";
+import styles from "./ContextStep.module.css";
 
 export default function ContextStep({
   onSelect,
@@ -13,20 +16,8 @@ export default function ContextStep({
   return (
     <div className="screen">
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <button
-          type="button"
-          onClick={() => navigate(exitTo)}
-          aria-label="Close"
-          style={{
-            background: "none",
-            border: "none",
-            color: "var(--text-secondary)",
-            fontSize: "var(--text-lg)",
-            cursor: "pointer",
-            padding: "var(--space-2)",
-          }}
-        >
-          ×
+        <button type="button" onClick={() => navigate(exitTo)} aria-label="Close" className={styles.close}>
+          <X size={20} />
         </button>
       </div>
 
@@ -37,22 +28,12 @@ export default function ContextStep({
       </h1>
 
       <div className="stack">
-        <button
-          type="button"
-          className="btn btn-primary btn-block"
-          style={{ minHeight: 72, fontSize: "var(--text-lg)" }}
-          onClick={() => onSelect("game")}
-        >
+        <PanelButton className={`${styles.tile} ${styles.tilePrimary}`} onClick={() => onSelect("game")}>
           Game
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary btn-block"
-          style={{ minHeight: 72, fontSize: "var(--text-lg)" }}
-          onClick={() => onSelect("practice")}
-        >
+        </PanelButton>
+        <PanelButton className={styles.tile} onClick={() => onSelect("practice")}>
           Practice
-        </button>
+        </PanelButton>
       </div>
 
       <div style={{ flex: 2 }} />

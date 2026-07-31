@@ -1,5 +1,6 @@
 import type { TriggerTag } from "../../types";
 import { triggerLabels } from "../../content/selfTalkScripts";
+import styles from "./TriggerFilterTabs.module.css";
 
 export type TriggerFilter = TriggerTag | "all";
 
@@ -13,13 +14,12 @@ export default function TriggerFilterTabs({
   onChange: (value: TriggerFilter) => void;
 }) {
   return (
-    <div style={{ display: "flex", gap: "var(--space-2)", overflowX: "auto", paddingBottom: "var(--space-1)" }}>
+    <div className={styles.row}>
       {options.map((option) => (
         <button
           key={option}
           type="button"
-          className="chip"
-          style={{ flexShrink: 0 }}
+          className={styles.tab}
           aria-pressed={value === option}
           onClick={() => onChange(option)}
         >

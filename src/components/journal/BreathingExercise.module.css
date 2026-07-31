@@ -19,7 +19,9 @@
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 24px var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,7 +31,7 @@
 .circleCount {
   font-family: var(--font-heading);
   font-size: var(--text-3xl);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
@@ -38,9 +40,13 @@
   font-size: var(--text-xl);
   font-weight: 600;
   text-align: center;
+  color: var(--accent);
 }
 
 .roundLabel {
-  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--text-secondary);
 }

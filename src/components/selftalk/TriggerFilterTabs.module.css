@@ -1,0 +1,27 @@
+.row {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+}
+
+.tab {
+  flex-shrink: 0;
+  appearance: none;
+  cursor: pointer;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+  padding: var(--space-2) var(--space-4);
+  min-height: var(--tap-min);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.tab[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}

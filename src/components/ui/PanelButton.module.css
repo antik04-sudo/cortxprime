@@ -1,0 +1,17 @@
+.button {
+  appearance: none;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  color: inherit;
+  font: inherit;
+}
+
+.button:active {
+  transform: scale(0.99);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
